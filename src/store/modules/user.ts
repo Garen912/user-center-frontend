@@ -1,24 +1,26 @@
 import type { Commit } from 'vuex'
 import { fetchLoginUser } from '@/utils/user'
+import type { UserState } from './user.interface'
 
-const state = {
+const state: UserState = {
   username: '未登录',
 }
 
 const mutations = {
   SET_LOGIN_USER: (
-    state: { [key: string]: string },
+    state: UserState,
     loginUser: { [key: string]: string }
   ) => {
     Object.assign(state, loginUser)
-    sessionStorage.setItem('loginUser', JSON.stringify(loginUser))
   },
 
-  CLEAR_LOGIN_USER: (state: { [key: string]: string }) => {
+  CLEAR_LOGIN_USER: (state: UserState) => {
     Object.keys(state).forEach((key) => {
-      state[key] = ''
+      if (key !== 'username') {
+        delete state[key]
+      }
     })
-    sessionStorage.removeItem('loginUser')
+    state.username = '未登录'
   },
 }
 

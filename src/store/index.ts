@@ -1,5 +1,4 @@
 import { createStore } from 'vuex'
-import getters from './getters'
 
 // 动态导入 './modules' 目录下的所有 .ts 文件
 const modulesFiles = import.meta.glob('./modules/*.ts')
@@ -16,7 +15,7 @@ const modules: { [key: string]: Module } = {}
 
 // 处理导入的模块
 const loadModules = async () => {
-  const promises = Object.keys(modulesFiles).map(async (path) => {
+  const promises = Object.keys(modulesFiles).filter(path => !path.endsWith('interface.ts')).map(async (path) => {
     const module = await modulesFiles[path]();
     modules[path.replace(/^\.\/modules\/(.*)\.\w+$/, '$1')] = (module as { default: Module }).default;
   });
@@ -28,8 +27,8 @@ const loadModules = async () => {
 const createStoreAsync = async () => {
   await loadModules(); // 等待所有模块加载完成
   return createStore({
-    getters,
     modules,
+    getters: {},
   });
 };
 

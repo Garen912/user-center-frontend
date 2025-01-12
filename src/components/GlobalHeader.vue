@@ -32,6 +32,7 @@ import { message } from 'ant-design-vue'
 import type { MenuProps } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { userLogout } from '@/api/user'
 
 const store = useStore()
 const loginUser = store.state.user
@@ -84,10 +85,16 @@ const items = ref<MenuProps['items']>([
   },
 ])
 
-const logout = () => {
-  store.dispatch('user/clearLoginUser')
-  message.success('退出登录成功')
-  router.push('/')
+const logout = async () => {
+  let res = await userLogout()
+  console.log('res', res);
+  if (res.data.data == 1) {
+    message.success('退出登录成功')
+    store.dispatch('user/clearLoginUser')
+    router.push('/')
+  } else {
+    message.error('退出登录失败')
+  }
 }
 </script>
 

@@ -28,11 +28,10 @@ export const userLogin = async (params: any) => {
  * 用户注销
  * @param params
  */
-export const userLogout = async (params: any) => {
+export const userLogout = async () => {
   return service.request({
     url: '/api/user/logout',
     method: 'POST',
-    data: params,
   })
 }
 
